@@ -1,3 +1,4 @@
+import 'package:app/model/login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:app/HomePage.dart';
@@ -9,6 +10,14 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
+  LoginRequestModel requestModel;
+
+  @override
+  void initstate(){
+    super.initState();
+    requestModel= new LoginRequestModel();
+  }
+  String value;
   int _pageState = 0;
 
   var _backgroundColor = Colors.white;
@@ -64,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
         _loginOpacity = 1;
 
         _loginYOffset = windowHeight;
-        _loginHeight = _keyboardVisible ? windowHeight : windowHeight - 270;
+        _loginHeight =_keyboardVisible ? windowHeight : windowHeight - 270;
 
         _loginXOffset = 0;
         _registerYOffset = windowHeight;
@@ -78,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
         _loginWidth = windowWidth;
         _loginOpacity = 1;
 
-        _loginYOffset = _keyboardVisible ? 40 : 270;
+        _loginYOffset =_keyboardVisible ? 40 : 270;
         _loginHeight = _keyboardVisible ? windowHeight : windowHeight - 270;
 
         _loginXOffset = 0;
@@ -88,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
         _backgroundColor = Color(0xFFBFFCD00);//Color(0xFFB1D71F2);
         _headingColor = Colors.white;
 
-        _headingTop = 80;
+        _headingTop = 10;
 
         _loginWidth = windowWidth - 40;
         _loginOpacity = 0.7;
@@ -97,14 +106,16 @@ class _LoginPageState extends State<LoginPage> {
         _loginHeight = _keyboardVisible ? windowHeight : windowHeight - 240;
 
         _loginXOffset = 20;
-        _registerYOffset = _keyboardVisible ? 55 : 270;
+        _registerYOffset = 50;// _keyboardVisible ? 55 : 270;
         _registerHeight = _keyboardVisible ? windowHeight : windowHeight - 270;
         break;
     }
 
+    //----------------------------- Welcome  Page-------------------------------------
     return Stack(
       children: <Widget>[
         AnimatedContainer(
+
             curve: Curves.fastLinearToSlowEaseIn,
             duration: Duration(
                 milliseconds: 1000
@@ -162,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
                       horizontal: 32
                   ),
                   child: Center(
-                    child: Image.asset('assets/images/k.png',width:400,height:350),
+                    child: Image.asset('assets/images/home.png',height:300),
 
                   ),
                 ),
@@ -200,15 +211,20 @@ class _LoginPageState extends State<LoginPage> {
               ],
             )
         ),
+
+
+        //-----------------------------Login  Page-------------------------------------
+
+
         AnimatedContainer(
           padding: EdgeInsets.all(32),
           width: _loginWidth,
-          height: _loginHeight,
+          height:_loginHeight+30,
           curve: Curves.fastLinearToSlowEaseIn,
           duration: Duration(
               milliseconds: 1000
           ),
-          transform: Matrix4.translationValues(_loginXOffset, _loginYOffset, 1),
+          transform: Matrix4.translationValues(_loginXOffset, _loginYOffset-30, 1),
           decoration: BoxDecoration(
               color: Colors.white.withOpacity(_loginOpacity),
               borderRadius: BorderRadius.only(
@@ -231,32 +247,100 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  InputWithIcon(
-                    icon: Icons.email,
-                    hint: "Enter Email...",
+
+                  // login page ------------username field
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Color(0xFFBC7C7C7),
+                            width: 2
+                        ) ,
+                        borderRadius: BorderRadius.circular(50)
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                            width: 60,
+                            child: Icon(
+                              Icons.person,
+                              size: 20,
+                              color: Color(0xFFBB9B9B9),
+                            )
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            onSaved: (input) => requestModel.email = input,
+
+                            decoration: InputDecoration(
+                              hintText: 'Username',
+                              contentPadding: EdgeInsets.symmetric(vertical: 20),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   SizedBox(height: 20,),
-                  InputWithIcon(
 
-                    icon: Icons.vpn_key,
-                    hint: "Enter Password...",
 
-                  )
+                  //login page -------------password field
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Color(0xFFBC7C7C7),
+                            width: 2
+                        ) ,
+                        borderRadius: BorderRadius.circular(50)
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                            width: 60,
+                            child: Icon(
+                              Icons.vpn_key,
+                              size: 20,
+                              color: Color(0xFFBB9B9B9),
+                            )
+                        ),
+                        Expanded(
+                          child: TextFormField(
+                            onSaved: (input) => requestModel.password=input,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              hintText: 'Enter Password',
+                              contentPadding: EdgeInsets.symmetric(vertical: 20),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               ),
               Column(
                 children: <Widget>[
-                  PrimaryButton(
-                    btnText: "Login",
+                  GestureDetector(
+                    onTap: (){
+                      if(true){
+                        print(requestModel.toJson());
+                      }
+
+                    },
+                    child: PrimaryButton(
+                      btnText: "Login",
+                    ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   GestureDetector(
                     onTap: () {
-                      setState(() {
-                        _pageState = 2;
+                        setState(() {
+                         _pageState = 2;
                       });
+
                     },
                     child: OutlineBtn(
                       btnText: "Create New Account",
@@ -267,8 +351,16 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
         ),
+
+
+
+        //-----------------------------Create Account Page-------------------------------------
+
+
+
+
         AnimatedContainer(
-          height: _registerHeight,
+          height:  MediaQuery.of(context).size.height-10,//_registerHeight,
           padding: EdgeInsets.all(32),
           curve: Curves.fastLinearToSlowEaseIn,
           duration: Duration(
@@ -296,18 +388,210 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  InputWithIcon(
-                    icon: Icons.email,
-                    hint: "Enter Email...",
+
+
+
+                    // for create account -----username
+
+
+
+
+
+                  Container(
+                      decoration: BoxDecoration(
+                      border: Border.all(
+                      color: Color(0xFFBC7C7C7),
+                      width: 2
+                        ) ,
+                    borderRadius: BorderRadius.circular(50)
+                    ),
+                    child: Row(
+                          children: <Widget>[
+                          Container(
+                            width: 60,
+                            child: Icon(
+                            Icons.person,
+                            size: 20,
+                            color: Color(0xFFBB9B9B9),
+                          )
+                    ),
+                    Expanded(
+                    child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Username',
+                          contentPadding: EdgeInsets.symmetric(vertical: 20),
+                          border: InputBorder.none,
+                    ),
+                    ),
+                    )
+                    ],
+                    ),
+                    ),
+
+                  SizedBox(height: 20,),
+
+
+
+                  // for create account ---------email
+
+
+
+
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Color(0xFFBC7C7C7),
+                            width: 2
+                        ),
+                        borderRadius: BorderRadius.circular(50)
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                            width: 60,
+                            child: Icon(
+                              Icons.email,
+                              size: 20,
+                              color: Color(0xFFBB9B9B9),
+                            )
+                        ),
+                        Expanded(
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Enter your E-mail',
+                              contentPadding: EdgeInsets.symmetric(vertical: 20),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 20,),
+
+                  // for create account ---------mobile no.
+
+
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Color(0xFFBC7C7C7),
+                            width: 2
+                        ),
+                        borderRadius: BorderRadius.circular(50)
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                            width: 60,
+                            child: Icon(
+                              Icons.send_to_mobile,
+                              size: 20,
+                              color: Color(0xFFBB9B9B9),
+                            )
+                        ),
+                        Expanded(
+                          child: TextField(
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              hintText: 'Mobile number',
+                              contentPadding: EdgeInsets.symmetric(vertical: 20),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+
+
+                  SizedBox(height: 20,),
+
+                  // for create account ---------password.
+
+
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Color(0xFFBC7C7C7),
+                            width: 2
+                        ),
+                        borderRadius: BorderRadius.circular(50)
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                            width: 60,
+                            child: Icon(
+                              Icons.vpn_key,
+                              size: 20,
+                              color: Color(0xFFBB9B9B9),
+                            )
+                        ),
+                        Expanded(
+                          child: TextField(
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              hintText: 'Password',
+                              contentPadding: EdgeInsets.symmetric(vertical: 20),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   SizedBox(height: 20,),
-                  InputWithIcon(
-                    icon: Icons.vpn_key,
-                    hint: "Enter Password...",
-                  )
+
+                  // for create account ---------conform password.
+
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Color(0xFFBC7C7C7),
+                            width: 2
+                        ),
+                        borderRadius: BorderRadius.circular(50)
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                            width: 60,
+                            child: Icon(
+                              Icons.vpn_key,
+                              size: 20,
+                              color: Color(0xFFBB9B9B9),
+                            )
+                        ),
+                        Expanded(
+                          child: TextField(
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              hintText: 'Conform Password',
+                              contentPadding: EdgeInsets.symmetric(vertical: 20),
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+
+
                 ],
               ),
+
+
+
+
+
+
+
               Column(
+                //   // for create account -----button 1
+
+
                 children: <Widget>[
                   PrimaryButton(
                     btnText: "Create Account",
@@ -315,14 +599,21 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: 20,
                   ),
+
+                  // for create account -----button2
+
+
                   GestureDetector(
                     onTap: () {
                       setState(() {
                         _pageState = 1;
                       });
                     },
-                    child: OutlineBtn(
-                      btnText: "Back To Login",
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: OutlineBtn(
+                        btnText: "Back To Login",
+                      ),
                     ),
                   )
                 ],
@@ -335,50 +626,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-class InputWithIcon extends StatefulWidget {
-  final IconData icon;
-  final String hint;
-  InputWithIcon({this.icon, this.hint});
-
-  @override
-  _InputWithIconState createState() => _InputWithIconState();
-}
-
-class _InputWithIconState extends State<InputWithIcon> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(
-              color: Color(0xFFBC7C7C7),
-              width: 2
-          ),
-          borderRadius: BorderRadius.circular(50)
-      ),
-      child: Row(
-        children: <Widget>[
-          Container(
-              width: 60,
-              child: Icon(
-                widget.icon,
-                size: 20,
-                color: Color(0xFFBB9B9B9),
-              )
-          ),
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 20),
-                  border: InputBorder.none,
-                  hintText: widget.hint
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
+//-----------------------------Button Dependancy -------------------------------------
 
 
 class PrimaryButton extends StatefulWidget {
@@ -425,7 +673,7 @@ class _OutlineBtnState extends State<OutlineBtn> {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
-              color: Color(0xFFBFFCD00),
+              color: Colors.blue,
               width: 2
           ),
           borderRadius: BorderRadius.circular(50)
@@ -443,4 +691,3 @@ class _OutlineBtnState extends State<OutlineBtn> {
     );
   }
 }
-
